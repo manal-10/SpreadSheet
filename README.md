@@ -353,7 +353,7 @@ void SpreadSheet::findCellSlot()
      //auto reply =  f.exec();
 
      //extraire le text
-     QString cell =f.getCell();
+     QString cell =f.getText();
      int row = spreadsheet->rowCount();
      int col = spreadsheet->columnCount();
 
@@ -567,3 +567,122 @@ private:
 };
 
 #endif // SPREADSHEET_H
+    
+# godiaog.cpp
+
+#include "godialog.h"
+#include "ui_godialog.h"
+#include <QRegExp>
+#include <QRegExpValidator>
+
+goDialog::goDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::goDialog)
+{
+    ui->setupUi(this);
+
+
+    QRegExp exp{"[A-Z][1-9][0-9]{0,2}"};
+
+
+    ui->lineEdit->setValidator(new QRegExpValidator(exp));
+}
+
+goDialog::~goDialog()
+{
+    delete ui;
+}
+
+QString goDialog::getCell() const
+{
+    return ui->lineEdit->text();
+}
+
+# godialog.h
+    
+#ifndef GODIALOG_H
+#define GODIALOG_H
+
+#include <QDialog>
+
+namespace Ui {
+class goDialog;
+}
+
+class goDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit goDialog(QWidget *parent = nullptr);
+    ~goDialog();
+    QString getCell() const;  //Getter pour le text de lineEdit
+
+private:
+    Ui::goDialog *ui;
+};
+
+#endif // GODIALOG_H
+    
+# finddialog.cpp
+    
+#include "finddialog.h"
+#include "ui_finddialog.h"
+
+findDialog::findDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::findDialog)
+{
+    ui->setupUi(this);
+}
+
+findDialog::~findDialog()
+{
+    delete ui;
+}
+QString findDialog::getText()const
+{
+return ui->lineEdit->text();
+}
+
+    
+# finddialog.h
+
+#ifndef FINDDIALOG_H
+#define FINDDIALOG_H
+
+#include <QDialog>
+
+namespace Ui {
+class findDialog;
+}
+
+class findDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit findDialog(QWidget *parent = nullptr);
+    ~findDialog();
+    QString getText()const;//getter pour le text du lineEdit
+
+
+private:
+    Ui::findDialog *ui;
+};
+
+#endif // FINDDIALOG_H
+
+# main.cpp
+    
+#include "spreadsheet.h"
+
+#include <QApplication>
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    SpreadSheet w;
+    w.show();
+    return a.exec();
+}
